@@ -1,0 +1,15 @@
+# Backend
+backend/node_modules/
+backend/coverage/
+backend/.env
+
+# Flutter/App
+app/.dart_tool/
+app/build/
+app/.idea/
+app/.metadata
+
+# Geral
+*.log
+.DS_Store
+.vscode/
