@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../routers/app_routes.dart';
+import '../../services/auth_service.dart';
 import '../../utils/app_colors.dart';
 import '../../utils/app_constants.dart';
 import '../../utils/app_spacing.dart';
@@ -8,8 +9,58 @@ import '../../utils/app_text_styles.dart';
 import '../../widgets/app_button.dart';
 import '../../widgets/app_text_field.dart';
 
-class LoginPage extends StatelessWidget {
+class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
+
+  @override
+  State<LoginPage> createState() => _LoginPageState();
+}
+
+class _LoginPageState extends State<LoginPage> {
+  final emailController = TextEditingController();
+  final senhaController = TextEditingController();
+
+  final AuthService authService = AuthService();
+
+  bool isLoading = false;
+
+  Future<void> login() async {
+    setState(() {
+      isLoading = true;
+    });
+
+    try {
+      await authService.login(
+        email: emailController.text.trim(),
+        senha: senhaController.text.trim(),
+      );
+
+      if (!mounted) return;
+
+      Navigator.pushReplacementNamed(context, AppRoutes.home);
+    } catch (error) {
+      if (!mounted) return;
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(error.toString().replaceAll('Exception: ', '')),
+        ),
+      );
+    } finally {
+      if (mounted) {
+        setState(() {
+          isLoading = false;
+        });
+      }
+    }
+  }
+
+  @override
+  void dispose() {
+    emailController.dispose();
+    senhaController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -46,26 +97,26 @@ class LoginPage extends StatelessWidget {
 
               const SizedBox(height: 42),
 
-              const AppTextField(
+              AppTextField(
                 label: 'E-mail',
                 icon: Icons.email_outlined,
+                controller: emailController,
               ),
 
               const SizedBox(height: AppSpacing.md),
 
-              const AppTextField(
+              AppTextField(
                 label: 'Senha',
                 icon: Icons.lock_outline,
                 obscureText: true,
+                controller: senhaController,
               ),
 
               const SizedBox(height: AppSpacing.lg),
 
               AppButton(
-                text: 'Entrar',
-                onPressed: () {
-                  Navigator.pushReplacementNamed(context, AppRoutes.home);
-                },
+                text: isLoading ? 'Entrando...' : 'Entrar',
+                onPressed: isLoading ? () {} : login,
               ),
 
               const SizedBox(height: AppSpacing.lg),
