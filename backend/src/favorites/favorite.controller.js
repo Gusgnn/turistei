@@ -47,8 +47,28 @@ const deleteFavorite = asyncHandler(async (req, res) => {
   );
 });
 
+async function getMyFavorites(req, res) {
+  try {
+    const usuarioId = req.user.id;
+
+    const favorites = await favoriteService.getFavoritesByUser(usuarioId);
+
+    return res.status(200).json({
+      success: true,
+      message: null,
+      data: favorites,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+}
+
 module.exports = {
   getFavoritesByUser,
   createFavorite,
   deleteFavorite,
+  getMyFavorites,
 };

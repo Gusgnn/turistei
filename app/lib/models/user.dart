@@ -1,13 +1,26 @@
-class AppUser {
+class User {
   final String id;
   final String name;
   final String email;
-  final List<String> interests;
+  final String type;
 
-  AppUser({
+  User({
     required this.id,
     required this.name,
     required this.email,
-    this.interests = const [],
+    required this.type,
   });
+
+  factory User.fromJson(Map<String, dynamic> json) {
+    return User(
+      id: json['id']?.toString() ?? '',
+      name: json['nome']?.toString() ??
+          json['name']?.toString() ??
+          '',
+      email: json['email']?.toString() ?? '',
+      type: json['tipo']?.toString() ??
+          json['type']?.toString() ??
+          'usuario',
+    );
+  }
 }

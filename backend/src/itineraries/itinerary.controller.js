@@ -124,6 +124,24 @@ const removePlace = asyncHandler(async (req, res) => {
   );
 });
 
+const updatePlaceOrder = asyncHandler(async (req, res) => {
+  const dto = itineraryDTO.toUpdatePlaceOrderDTO(req.body);
+
+  const place =
+    await itineraryService.updatePlaceOrder(dto);
+
+  if (!place) {
+    throw new NotFoundError('Item não encontrado.');
+  }
+
+  return res.json(
+    ApiResponse.success(
+      place,
+      'Ordem do local atualizada.'
+    )
+  );
+});
+
 module.exports = {
   getByUser,
   getById,
@@ -133,4 +151,5 @@ module.exports = {
   remove,
   addPlace,
   removePlace,
+  updatePlaceOrder,
 };

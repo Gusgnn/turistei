@@ -21,9 +21,9 @@ function validateUserId(req, res, next) {
 }
 
 function validateCreate(req, res, next) {
-  const { usuario_id, titulo } = req.body || {};
+  const { usuario_id, titulo, nome } = req.body || {};
 
-  if (!usuario_id || !titulo) {
+  if (!usuario_id || (!titulo && !nome)) {
     return next(
       new ValidationError('Usuário e título são obrigatórios.')
     );
@@ -38,6 +38,29 @@ function validateAddPlace(req, res, next) {
   if (!roteiro_id || !local_id || ordem === undefined) {
     return next(
       new ValidationError('Roteiro, local e ordem são obrigatórios.')
+    );
+  }
+
+  next();
+}
+
+function validateUpdatePlaceOrder(req, res, next) {
+  const { roteiro_id, local_id, ordem } = req.body || {};
+
+  const roteiroIdNumber = Number(roteiro_id);
+  const localIdNumber = Number(local_id);
+  const ordemNumber = Number(ordem);
+
+  if (
+    Number.isNaN(roteiroIdNumber) ||
+    roteiroIdNumber <= 0 ||
+    Number.isNaN(localIdNumber) ||
+    localIdNumber <= 0 ||
+    Number.isNaN(ordemNumber) ||
+    ordemNumber <= 0
+  ) {
+    return next(
+      new ValidationError('Roteiro, local ou ordem inválidos.')
     );
   }
 
@@ -65,5 +88,6 @@ module.exports = {
   validateUserId,
   validateCreate,
   validateAddPlace,
+  validateUpdatePlaceOrder,
   validateRemovePlace,
 };

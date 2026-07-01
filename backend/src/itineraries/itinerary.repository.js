@@ -31,6 +31,7 @@ async function findPlacesByItineraryId(roteiroId) {
   const result = await pool.query(
     `
     SELECT
+      l.id,
       rl.roteiro_id,
       rl.local_id,
       rl.ordem,
@@ -39,10 +40,13 @@ async function findPlacesByItineraryId(roteiroId) {
       l.endereco,
       l.latitude,
       l.longitude,
-      l.imagem_principal
+      l.imagem_principal,
+      c.nome AS categoria_nome
     FROM roteiro_locais rl
     INNER JOIN locais l
       ON l.id = rl.local_id
+    LEFT JOIN categorias c
+      ON c.id = l.categoria_id
     WHERE rl.roteiro_id = $1
     ORDER BY rl.ordem ASC
     `,
@@ -137,6 +141,25 @@ async function removePlace(roteiroId, localId) {
   return result.rows[0];
 }
 
+async function updatePlaceOrder(data) {
+  const result = await pool.query(
+    `
+    UPDATE roteiro_locais
+    SET ordem = $3
+    WHERE roteiro_id = $1
+      AND local_id = $2
+    RETURNING *;
+    `,
+    [
+      data.roteiro_id,
+      data.local_id,
+      data.ordem,
+    ]
+  );
+
+  return result.rows[0];
+}
+
 module.exports = {
   findByUserId,
   findById,
@@ -146,4 +169,5 @@ module.exports = {
   remove,
   addPlace,
   removePlace,
+  updatePlaceOrder,
 };

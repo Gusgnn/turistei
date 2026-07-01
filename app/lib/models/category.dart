@@ -1,15 +1,19 @@
-import 'package:flutter/material.dart';
-
-class AppCategory {
+class Category {
   final String id;
-  final String title;
-  final IconData icon;
-  final Color color;
+  final String name;
+  final String? icon;
 
-  AppCategory({
+  Category({
     required this.id,
-    required this.title,
-    required this.icon,
-    required this.color,
+    required this.name,
+    this.icon,
   });
+
+  factory Category.fromJson(Map<String, dynamic> json) {
+    return Category(
+      id: json['id']?.toString() ?? '',
+      name: json['nome']?.toString() ?? '',
+      icon: json['icone']?.toString(),
+    );
+  }
 }

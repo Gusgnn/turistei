@@ -26,6 +26,14 @@ class _RecommendationListState extends State<RecommendationList> {
     _placesFuture = _placeService.getPlaces();
   }
 
+  void _openPlaceDetails(Place place) {
+    Navigator.pushNamed(
+      context,
+      AppRoutes.placeDetails,
+      arguments: place.id,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<List<Place>>(
@@ -94,14 +102,13 @@ class _RecommendationListState extends State<RecommendationList> {
 
                     return PlaceCard(
                       title: place.title,
-                      category:
-                          place.category.isEmpty ? 'Sem categoria' : place.category,
+                      category: place.category.isEmpty
+                          ? 'Sem categoria'
+                          : place.category,
                       distance: place.distance.isEmpty ? '--' : place.distance,
                       rating: place.rating,
                       icon: Icons.place,
-                      onTap: () {
-                        Navigator.pushNamed(context, AppRoutes.placeDetails);
-                      },
+                      onTap: () => _openPlaceDetails(place),
                     );
                   },
                 ),

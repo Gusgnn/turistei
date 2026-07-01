@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
+
 import '../utils/app_colors.dart';
 import '../utils/app_radius.dart';
 import '../utils/app_spacing.dart';
 
 class AppButton extends StatelessWidget {
   final String text;
-  final VoidCallback onPressed;
+  final VoidCallback? onPressed;
   final IconData? icon;
   final bool outlined;
 

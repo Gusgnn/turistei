@@ -3,7 +3,7 @@ const { toNumber } = require('../../common/utils/parser');
 function toCreateDTO(body) {
   return {
     usuario_id: toNumber(body.usuario_id),
-    titulo: body.titulo?.trim(),
+    titulo: body.titulo?.trim() || body.nome?.trim(),
     descricao: body.descricao?.trim() ?? null,
   };
 }
@@ -13,7 +13,9 @@ function toUpdateDTO(body) {
     titulo:
       body.titulo !== undefined
         ? body.titulo.trim()
-        : undefined,
+        : body.nome !== undefined
+          ? body.nome.trim()
+          : undefined,
 
     descricao:
       body.descricao !== undefined
@@ -30,8 +32,17 @@ function toAddPlaceDTO(body) {
   };
 }
 
+function toUpdatePlaceOrderDTO(body) {
+  return {
+    roteiro_id: toNumber(body.roteiro_id),
+    local_id: toNumber(body.local_id),
+    ordem: toNumber(body.ordem),
+  };
+}
+
 module.exports = {
   toCreateDTO,
   toUpdateDTO,
   toAddPlaceDTO,
+  toUpdatePlaceOrderDTO,
 };

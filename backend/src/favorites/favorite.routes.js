@@ -8,6 +8,7 @@
 const express = require('express');
 
 const favoriteController = require('./favorite.controller');
+const authMiddleware = require('../common/middleware/authMiddleware');
 
 const {
   validateFavoriteId,
@@ -16,6 +17,12 @@ const {
 } = require('./favorite.validation');
 
 const router = express.Router();
+
+router.get(
+  '/me',
+  authMiddleware,
+  favoriteController.getMyFavorites
+);
 
 /**
  * @swagger

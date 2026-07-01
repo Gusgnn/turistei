@@ -19,11 +19,22 @@ class AuthService {
     );
 
     if (response['success'] == true) {
-      final token = response['data']?['token'];
+      final data = response['data'];
+      final token = data?['token'];
+      final user = data?['user'] ?? data?['usuario'];
+
+      final prefs = await SharedPreferences.getInstance();
 
       if (token != null) {
-        final prefs = await SharedPreferences.getInstance();
         await prefs.setString('token', token.toString());
+      }
+
+      if (user is Map && user['id'] != null) {
+        await prefs.setString('userId', user['id'].toString());
+      } else if (data?['id'] != null) {
+        await prefs.setString('userId', data['id'].toString());
+      } else if (data?['usuario_id'] != null) {
+        await prefs.setString('userId', data['usuario_id'].toString());
       }
 
       return Map<String, dynamic>.from(response);
@@ -56,7 +67,12 @@ class AuthService {
 
   Future<void> logout() async {
     final prefs = await SharedPreferences.getInstance();
+
     await prefs.remove('token');
+    await prefs.remove('userId');
+    await prefs.remove('usuario_id');
+    await prefs.remove('user_id');
+    await prefs.remove('id');
   }
 
   Future<String?> getToken() async {

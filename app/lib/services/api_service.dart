@@ -59,14 +59,28 @@ class ApiService {
     return _handleResponse(response);
   }
 
-  Future<dynamic> delete(String url, {bool auth = false}) async {
-    final response = await http.delete(
+  Future<dynamic> patch(
+    String url, {
+    Map<String, dynamic>? body,
+    bool auth = false,
+  }) async {
+    final response = await http.patch(
       Uri.parse(url),
       headers: await _headers(auth: auth),
+      body: jsonEncode(body ?? {}),
     );
 
     return _handleResponse(response);
   }
+
+  Future<dynamic> delete(String url, {bool auth = false}) async {
+  final response = await http.delete(
+    Uri.parse(url),
+    headers: await _headers(auth: auth),
+  );
+
+  return _handleResponse(response);
+}
 
   dynamic _handleResponse(http.Response response) {
     dynamic body;

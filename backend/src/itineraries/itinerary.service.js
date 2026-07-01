@@ -32,6 +32,10 @@ async function removePlace(roteiroId, localId) {
   return await itineraryRepository.removePlace(roteiroId, localId);
 }
 
+async function updatePlaceOrder(data) {
+  return await itineraryRepository.updatePlaceOrder(data);
+}
+
 module.exports = {
   getItinerariesByUser,
   getItineraryById,
@@ -41,4 +45,5 @@ module.exports = {
   deleteItinerary,
   addPlace,
   removePlace,
+  updatePlaceOrder,
 };
